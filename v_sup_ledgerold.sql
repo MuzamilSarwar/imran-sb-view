@@ -1,8 +1,27 @@
---select * from 
-create or replace view v_sup_ledgerold as
+/* Formatted on 02/08/2024 16:56:43 (QP5 v5.215.12089.38647) */
+CREATE OR REPLACE FORCE VIEW APPS.V_SUP_LEDGER
 (
-
-SELECT A.SET_OF_BOOKS_ID,
+   SET_OF_BOOKS_ID,
+   ORG_ID,
+   VENDOR_NUM_SMRY,
+   VENDOR_ID,
+   VENDOR_SITE_ID,
+   VENDOR_SITE_CODE_SMRY,
+   VENDOR_NAME_SMRY,
+   GL_DATE_SMRY,
+   VOUCHAR_SMRY,
+   INVOICE_TYPE_LOOKUP_CODE_SMRY,
+   DESCRIPTION_SMRY,
+   INVOICE_ID,
+   INVOICE_NUM_SMRY,
+   INVOICE_CURRENCY_CODE_SMRY,
+   DR_FC_SMRY,
+   CR_FC_SMRY,
+   DR_SMRY,
+   CR_SMRY
+)
+AS
+     SELECT A.SET_OF_BOOKS_ID,
             A.org_id,
             A.vendor_num vendor_num_smry,
             A.VENDOR_ID,
@@ -54,12 +73,12 @@ SELECT A.SET_OF_BOOKS_ID,
                                         AIA.INVOICE_CURRENCY_CODE,
                                         'PKR', ABS (aila.amount),
                                         (AIA.EXCHANGE_RATE * ABS (aila.amount)))),
-                    /*   'TAX', DECODE (
-                                 SIGN (aila.AMOUNT),
-                                 -1, DECODE (
-                                        AIA.INVOICE_CURRENCY_CODE,
-                                        'PKR', ABS (aila.amount),
-                                        (AIA.EXCHANGE_RATE * ABS (aila.amount)))),*/
+                       /*   'TAX', DECODE (
+                                    SIGN (aila.AMOUNT),
+                                    -1, DECODE (
+                                           AIA.INVOICE_CURRENCY_CODE,
+                                           'PKR', ABS (aila.amount),
+                                           (AIA.EXCHANGE_RATE * ABS (aila.amount)))),*/
                        'ITEM', DECODE (
                                   SIGN (aila.AMOUNT),
                                   -1, DECODE (
@@ -128,11 +147,11 @@ SELECT A.SET_OF_BOOKS_ID,
                                  -1, DECODE (AIA.INVOICE_CURRENCY_CODE,
                                              'PKR', 0,
                                              (ABS (aila.amount)))),
-                      /* 'TAX', DECODE (
-                                 SIGN (aila.AMOUNT),
-                                 -1, DECODE (AIA.INVOICE_CURRENCY_CODE,
-                                             'PKR', 0,
-                                             (ABS (aila.amount)))),*/
+                       /* 'TAX', DECODE (
+                                  SIGN (aila.AMOUNT),
+                                  -1, DECODE (AIA.INVOICE_CURRENCY_CODE,
+                                              'PKR', 0,
+                                              (ABS (aila.amount)))),*/
                        'ITEM', DECODE (
                                   SIGN (aila.AMOUNT),
                                   -1, DECODE (AIA.INVOICE_CURRENCY_CODE,
@@ -1177,7 +1196,7 @@ SELECT A.SET_OF_BOOKS_ID,
                       xel.ACCOUNTING_DATE,
                       pv.SEGMENT1,
                       pvsa.VENDOR_SITE_CODE) A
-      WHERE 1 = 1 AND NVL (A.cancelled, 'N') = 'N'
+      WHERE 1 = 1                           --AND NVL (A.cancelled, 'N') = 'N'
    --and  vendor_id  = nvl(:p_vendor_id,A.vendor_id) --in (select vendor_id from po_vendors where segment1 between vend_f and vend_t)
    --     and A.VENDOR_SITE_ID = nvl(:P_VENDOR_SITE_ID,A.VENDOR_SITE_ID)
    --      AND TRUNC(A.gl_date) BETWEEN :p_date_from AND :CP_GL_TO_DATE
@@ -1200,4 +1219,4 @@ SELECT A.SET_OF_BOOKS_ID,
             DESCRIPTION,
             INVOICE_NUM,
             INVOICE_CURRENCY_CODE,
-            A.Invoice_ID ) --where vendor_id=14046
+            A.Invoice_ID;
